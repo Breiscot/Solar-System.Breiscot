@@ -188,8 +188,8 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -361,6 +361,7 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
+  trailLength: 20
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!135 &378174392
 SphereCollider:
@@ -440,6 +441,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 378174389}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &637510503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 637510504}
+  - component: {fileID: 637510505}
+  m_Layer: 0
+  m_Name: StarFields
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &637510504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637510503}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1942473325}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &637510505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637510503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854565a265248c743ab867c73faf37f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarFields
+  numberOfStars: 2000
+  spawnRadius: 1000
+  starSize: 0.5
 --- !u!1 &918405731
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +543,7 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
+  trailLength: 20
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!135 &918405734
 SphereCollider:
@@ -661,6 +710,7 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
+  trailLength: 20
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!135 &1336447124
 SphereCollider:
@@ -965,6 +1015,7 @@ Transform:
   - {fileID: 1730345064}
   - {fileID: 202276935}
   - {fileID: 1532003664}
+  - {fileID: 637510504}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2015071010
@@ -1022,6 +1073,7 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
+  trailLength: 20
   currentVelocity: {x: 0, y: 0, z: 0}
 --- !u!135 &2015071013
 SphereCollider:
