@@ -6,10 +6,13 @@ public class CelestialBody : MonoBehaviour
     public float mass = 1000f;
     public float radius = 1f;
 
-    [Header("Velocità Iniziale")]
+    [Header("Orbita")]
+    public bool autoCalculateVelocity = false;
+    public Transform orbitAround;
     public Vector3 initialVelocity;
 
     [Header("Visualizzazione")]
+    public Color bodyColor = Color.white;
     public Color orbitColor = Color.white;
     public bool drawOrbitPath = true;
 
@@ -25,17 +28,58 @@ public class CelestialBody : MonoBehaviour
 
     void Start()
     {
-        // Imposta la velocità iniziale
-        currentVelocity = initialVelocity;
-
-        // Scala l'oggetto in base al raggio
+         // Scala l'oggetto
         transform.localScale = Vector3.one * radius * 2;
 
-        // Setup del LineRenderer per tracciare l'orbita
+        // Colore
+        Renderer rend = GetComponent<Renderer>();
+        if (rend != null)
+        {
+            rend.material.color = bodyColor;
+        }
+
+        // Imposta la velocità orbitale automatica
+        if (autoCalculateVelocity && orbitAround != null)
+        {
+            CalculateOrbitalVelocity();
+        }
+        else
+        {
+            currentVelocity = initialVelocity;
+        }
+
+        // Setup del dell'orbita
         if (drawOrbitPath)
         {
             SetupOrbitLine();
         }
+    }
+
+    void CalculateOrbitalVelocity()
+    {
+        // Trova il GravityManager per la costante G
+        GravityManager gm = FindObjectOfType<GravityManager>();
+        if (gm == null) return;
+
+        // Direzione verso il corpo centrale
+        Vector3 direction = orbitAround.position - transform.position;
+        float distance = direction.magnitude;
+
+        // v = sqrt(G * M / r)
+        CelestialBody otherBody = orbitAround.GetComponent<CelestialBody>();
+        if (otherBody == null) return;
+
+        float orbitalSpeed = Mathf.Sqrt(gm.gravitationalConstant * otherBody.mass / distance);
+
+        // Direzione tangente
+        // Ruota di 90° sul piano XZ
+        Vector3 tangent = new Vector3(-direcition.normalized.z, 0, direction.normalized.x);
+
+        currentVelocity = tangent * orbitalSpeed;
+
+        // Se il corpo attorno a cui orbita si muove, aggiungi la sua velocità
+        currentVelocity += otherBody.currentVelocity;
+
     }
 
     void SetupOrbitLine()

@@ -6,7 +6,6 @@ public class CameraController : MonoBehaviour
     public Transform target;
 
     [Header("Movimento")]
-    public float moveSpeed = 50f;
     public float zoomSpeed = 100f;
     public float rotationSpeed = 100f;
 
@@ -18,6 +17,18 @@ public class CameraController : MonoBehaviour
     private float rotationX = 0f;
     private float rotationY = 45f;
 
+    void Start()
+    {
+        if (target == null)
+        {
+            GameObject sun = GameObject.Find("Sun");
+            if (sun != null)
+            {
+                target = sun.transform;
+            }
+        }
+    }
+
     void Update()
     {
         HandleInput();
@@ -27,7 +38,7 @@ public class CameraController : MonoBehaviour
     void HandleInput()
     {
         // Zoom con la rotella del mouse
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float scroll = Input.mouseScrollDelta.y;
         currentDistance -= scroll * zoomSpeed;
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
 
@@ -38,24 +49,16 @@ public class CameraController : MonoBehaviour
             rotationY -= Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
             rotationY = Mathf.Clamp(rotationY, 5f, 85f);
         }
-
-        // Cambio target numerici (1-9)
-        for (int i = 1; 1 <= 9; i++)
-        {
-            if (Input.GetKeyDown(i.ToString()))
-            {
-                CelestialBody[] bodies = FindObjectsOfType<CelestialBody>();
-                if (i - 1 < bodies.Length)
-                {
-                    target = bodies[i - 1].transform;
-                }
-            }
-        }
+       
     }
 
     void UpdateCameraPosition()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            Debug.LogWarning("CameraController: nessun target assegnato.");
+            return;
+        }
 
         // Calcola la posizione della camera
         Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
