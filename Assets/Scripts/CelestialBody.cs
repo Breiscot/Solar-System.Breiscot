@@ -4,7 +4,7 @@ public class CelestialBody : MonoBehaviour
 {
     [Header("Proprietà Fisiche")]
     public float mass = 1000f;
-    public float radius = if;
+    public float radius = 1f;
 
     [Header("Velocità Iniziale")]
     public Vector3 initialVelocity;
@@ -38,7 +38,7 @@ public class CelestialBody : MonoBehaviour
         }
     }
 
-    void SetupOrbitLine();
+    void SetupOrbitLine()
     {
         orbitLine = gameObject.AddComponent<LineRenderer>();
         orbitLine.positionCount = maxOrbitPoints;

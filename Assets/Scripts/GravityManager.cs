@@ -54,7 +54,7 @@ public class GravityManager : MonoBehaviour
 
                 // Formula di Newton: F = G * (m1 * m2) / r²
                 // Accelerazione: a = F / m1 = G * m2 / r²
-                float accelerationMagnitude = gravitationalConstant * otherBody.mass / (distance * distance);
+                float accelerationMagnitude = gravitationalCostant * otherBody.mass / (distance * distance);
 
                 // Direzione normalizzata * magnitudine
                 Vector3 acceleration = direction.normalized * accelerationMagnitude;
@@ -63,7 +63,7 @@ public class GravityManager : MonoBehaviour
             }
 
             // Applica l'accelerazione al corpo
-            body.UpdateVelocity(totalAcceleration, TimeStep);
+            body.UpdateVelocity(totalAcceleration, timeStep);
         }
     }
 
