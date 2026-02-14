@@ -4,8 +4,7 @@ using System.Collections.Generic;
 public class GravityManager : MonoBehaviour
 {
     [Header("Costanti Fisiche")]
-    [Tooltip("Costante gravitazionale (regola per bilanciare)")]
-    public float gravitationalCostant = 0.1f;
+    public float gravitationalConstant = 0.1f;
 
     [Header("Simulazione")]
     public float timeScale = 1f;
@@ -17,8 +16,7 @@ public class GravityManager : MonoBehaviour
     {
         // Trova tutti i corpi celesti
         bodies.AddRange(FindObjectsOfType<CelestialBody>());
-
-        Debug.Log($"Trovati {bodies.Count} corpi celesti");
+        Debug.Log($"Trovati " + bodies.Count + "corpi celesti");
     }
 
     void FixedUpdate()
@@ -26,16 +24,6 @@ public class GravityManager : MonoBehaviour
         float timeStep = Time.fixedDeltaTime * timeScale;
 
         // Prima calcola tutte le accelerazioni
-        CalculateAllAccelerations(timeStep);
-
-        // Poi aggiorna tutte le posizioni
-        UpdateAllPositions(timeStep);
-    }
-
-    void CalculateAllAccelerations(float timeStep)
-    {
-        // Per i corpi, calcola attrazione gravitazionale
-        // da tutti gli altri corpi
         foreach (CelestialBody body in bodies)
         {
             Vector3 totalAcceleration = Vector3.zero;
@@ -54,29 +42,19 @@ public class GravityManager : MonoBehaviour
 
                 // Formula di Newton: F = G * (m1 * m2) / r²
                 // Accelerazione: a = F / m1 = G * m2 / r²
-                float accelerationMagnitude = gravitationalCostant * otherBody.mass / (distance * distance);
+                float accelerationMagnitude = gravitationalConstant * otherBody.mass / (distance * distance);
 
                 // Direzione normalizzata * magnitudine
-                Vector3 acceleration = direction.normalized * accelerationMagnitude;
-
-                totalAcceleration += acceleration;
+                totalAcceleration += direction.normalized * accelerationMagnitude;
             }
 
             // Applica l'accelerazione al corpo
-            body.UpdateVelocity(totalAcceleration, timeStep);
+            body.currentVelocity += totalAcceleration * timeStep;
         }
-    }
 
-    void UpdateAllPositions(float timeStep)
-    {
         foreach (CelestialBody body in bodies)
         {
             body.UpdatePosition(timeStep);
         }
-    }
-
-    public void UnregisterBody(CelestialBody body)
-    {
-        bodies.Remove(body);
     }
 }

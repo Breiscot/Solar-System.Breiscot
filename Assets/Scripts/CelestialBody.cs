@@ -15,16 +15,11 @@ public class CelestialBody : MonoBehaviour
     public Color bodyColor = Color.white;
     public Color orbitColor = Color.white;
     public bool drawOrbitPath = true;
+    public float trailLength = 20f;
 
     // Velocità corrente (per il GravityManager é pubblica)
     [HideInInspector]
     public Vector3 currentVelocity;
-
-    // Per tracciare l'orbita
-    private LineRenderer orbitLine;
-    private Vector3[] orbitPosition;
-    private int maxOrbitPoints = 500;
-    private int currentOrbitIndex = 0;
 
     void Start()
     {
@@ -51,7 +46,7 @@ public class CelestialBody : MonoBehaviour
         // Setup del dell'orbita
         if (drawOrbitPath)
         {
-            SetupOrbitLine();
+            SetupTrail();
         }
     }
 
@@ -71,51 +66,43 @@ public class CelestialBody : MonoBehaviour
 
         float orbitalSpeed = Mathf.Sqrt(gm.gravitationalConstant * otherBody.mass / distance);
 
-        // Direzione tangente
-        // Ruota di 90° sul piano XZ
-        Vector3 tangent = new Vector3(-direcition.normalized.z, 0, direction.normalized.x);
-
+        Vector3 tangent = new Vector3(-direction.normalized.z, 0, direction.normalized.x);
         currentVelocity = tangent * orbitalSpeed;
-
-        // Se il corpo attorno a cui orbita si muove, aggiungi la sua velocità
         currentVelocity += otherBody.currentVelocity;
 
+        Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed);
     }
 
-    void SetupOrbitLine()
+    void SetupTrail()
     {
-        orbitLine = gameObject.AddComponent<LineRenderer>();
-        orbitLine.positionCount = maxOrbitPoints;
-        orbitLine.startWidth = 0.1f;
-        orbitLine.endWidth = 0.1f;
-        orbitLine.material = new Material(Shader.Find("Sprites/Default"));
-        orbitLine.startColor = orbitColor;
-        orbitLine.endColor = orbitColor;
+        TrailRenderer trail = gameObject.AddComponent<TrailRenderer>();
 
-        orbitPosition = new Vector3[maxOrbitPoints];
-        for (int i = 0; i < maxOrbitPoints; i++)
-        {
-            orbitPosition[i] = transform.position;
-        }
-    }
+        trail.time = trailLength;
 
-    // Chiamato dal GravityManager
-    public void UpdateVelocity(Vector3 acceleration, float timeStep)
-    {
-        currentVelocity += acceleration * timeStep;
+        trail.startWidth = 0.2f;
+        trail.endWidth = 0.05f;
+
+        // Colore: pieno all'inizio, trasparente alla fine
+        Color startColor = orbitColor;
+        Color endColor = orbitColor;
+        endColor.a = 0f;
+
+        trail.startColor = startColor;
+        trail.endColor = endColor;
+
+        // Materiale semplice
+        trail.material = new Material(Shader.Find("Sprites/Default"));
+
+        // Non viene influenzato dalle ombre
+        trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        trail.receiveShadows = false;
+
+        trail.minVertexDistance = 0.5f;
     }
 
     // Chiamato dal GravityManager
     public void UpdatePosition(float timeStep)
     {
         transform.position += currentVelocity * timeStep;
-
-        // Aggiorna la linea dell'orbita
-        if (drawOrbitPath && orbitLine != null)
-        {
-            orbitPosition[currentOrbitIndex] = transform.position;
-            currentOrbitIndex = (currentOrbitIndex + 1) % maxOrbitPoints;
-            orbitLine.SetPositions(orbitPosition);
-        }
     }
 }

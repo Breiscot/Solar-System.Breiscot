@@ -355,7 +355,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialBody
   mass: 100
   radius: 1
-  initialVelocity: {x: 0, y: 0, z: 14}
+  autoCalculateVelocity: 1
+  orbitAround: {fileID: 2015071011}
+  initialVelocity: {x: 0, y: 0, z: 4.5}
+  bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
   currentVelocity: {x: 0, y: 0, z: 0}
@@ -486,7 +489,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialBody
   mass: 10
   radius: 0.3
-  initialVelocity: {x: 0, y: 0, z: 17}
+  autoCalculateVelocity: 1
+  orbitAround: {fileID: 378174390}
+  initialVelocity: {x: 0, y: 0, z: 5.5}
+  bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
   currentVelocity: {x: 0, y: 0, z: 0}
@@ -649,7 +655,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialBody
   mass: 80
   radius: 0.8
-  initialVelocity: {x: 0, y: 0, z: 11}
+  autoCalculateVelocity: 1
+  orbitAround: {fileID: 2015071011}
+  initialVelocity: {x: 0, y: 0, z: 3.5}
+  bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
   currentVelocity: {x: 0, y: 0, z: 0}
@@ -807,7 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570b2f809f00ef547a2465f4c48f61c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GravityManager
-  gravitationalCostant: 0.1
+  gravitationalConstant: 0.1
   timeScale: 1
 --- !u!1 &1730345063
 GameObject:
@@ -1007,7 +1016,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CelestialBody
   mass: 10000
   radius: 5
+  autoCalculateVelocity: 0
+  orbitAround: {fileID: 0}
   initialVelocity: {x: 0, y: 0, z: 0}
+  bodyColor: {r: 1, g: 1, b: 1, a: 1}
   orbitColor: {r: 1, g: 1, b: 1, a: 1}
   drawOrbitPath: 1
   currentVelocity: {x: 0, y: 0, z: 0}
