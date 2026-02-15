@@ -466,12 +466,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637510503}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1942473325}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &637510505
 MonoBehaviour:
@@ -485,7 +485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854565a265248c743ab867c73faf37f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarFields
-  numberOfStars: 2000
+  numberOfStars: 2500
   spawnRadius: 1000
   starSize: 0.5
 --- !u!1 &918405731
@@ -1015,7 +1015,6 @@ Transform:
   - {fileID: 1730345064}
   - {fileID: 202276935}
   - {fileID: 1532003664}
-  - {fileID: 637510504}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2015071010
@@ -1159,3 +1158,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1942473325}
   - {fileID: 330585546}
+  - {fileID: 637510504}
