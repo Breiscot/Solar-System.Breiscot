@@ -9,6 +9,7 @@ public class CelestialBody : MonoBehaviour
     [Header("Tipo")]
     public bool isSun = false;
     public bool isStatic = false;
+    public bool isMoon = false;
 
     [Header("Orbita")]
     public bool autoCalculateVelocity = false;
@@ -31,28 +32,20 @@ public class CelestialBody : MonoBehaviour
     {
         transform.localScale = Vector3.one * radius * 2;
 
-        // Imposta la velocità orbitale automatica
-        if (autoCalculateVelocity && orbitAround != null)
-        {
-            CalculateOrbitalVelocity();
-        }
-        else
+        if (!autoCalculateVelocity)
         {
             currentVelocity = initialVelocity;
         }
 
-        // Setup del dell'orbita
         if (drawOrbitPath && !isSun)
         {
             SetupTrail();
         }
     }
 
-    void CalculateOrbitalVelocity()
+    public void CalculateOrbitalVelocity(float G)
     {
-        // Trova il GravityManager per la costante G
-        GravityManager gm = FindObjectOfType<GravityManager>();
-        if (gm == null) return;
+        if (orbitAround == null) return;
 
         // Direzione verso il corpo centrale
         Vector3 direction = orbitAround.position - transform.position;
@@ -62,17 +55,14 @@ public class CelestialBody : MonoBehaviour
         CelestialBody otherBody = orbitAround.GetComponent<CelestialBody>();
         if (otherBody == null) return;
 
-        float orbitalSpeed = Mathf.Sqrt(gm.gravitationalConstant * otherBody.mass / distance);
+        float orbitalSpeed = Mathf.Sqrt(G * otherBody.mass / distance);
 
         Vector3 tangent = new Vector3(-direction.normalized.z, 0, direction.normalized.x);
         currentVelocity = tangent * orbitalSpeed;
 
-        if (!otherBody.isStatic)
-        {
-            currentVelocity += otherBody.currentVelocity;
-        }
+        currentVelocity += otherBody.currentVelocity;
 
-        Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed + ", distanza =" + distance);
+        Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed + " parent vel=" + otherBody.currentVelocity.magnitude);
     }
 
     void SetupTrail()

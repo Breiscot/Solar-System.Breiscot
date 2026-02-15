@@ -11,8 +11,7 @@ public class GravityManager : MonoBehaviour
 
     [Header("Stabilità")]
     [Tooltip("Se attivo, i pianeti sentono solo la gravità del sole")]
-    public bool onlySunGravity = false;
-    public float softeningFactor = 1f;
+    public float softeningFactor = 0.5f;
 
     private List<CelestialBody> bodies = new List<CelestialBody>();
     private bool initialized = false;
@@ -28,6 +27,25 @@ public class GravityManager : MonoBehaviour
         bodies.AddRange(FindObjectsOfType<CelestialBody>());
         Debug.Log($"Trovati " + bodies.Count + "corpi celesti");
 
+        // Calcola la velocità dei pianeti
+        foreach (CelestialBody body in bodies)
+        {
+            if (body.autoCalculateVelocity && !body.isMoon && !body.isSun)
+            {
+                body.CalculateOrbitalVelocity(gravitationalConstant);
+            }
+        }
+
+        // Calcola la velocità della luna
+        foreach (CelestialBody body in bodies)
+        {
+            if (body.autoCalculateVelocity && body.isMoon)
+            {
+                body.CalculateOrbitalVelocity(gravitationalConstant);
+            }
+        }
+
+        // Calcola le accelerazioni iniziali
         foreach (CelestialBody body in bodies)
         {
             body.currentAcceleration = CalculateAcceleration(body);
@@ -63,13 +81,40 @@ public class GravityManager : MonoBehaviour
     {
         Vector3 totalAcceleration = Vector3.zero;
 
+        if (body.isMoon)
+        {
+            if (body.orbitAround != null)
+            {
+                CelestialBody parent = body.orbitAround.GetComponent<CelestialBody>();
+                if (parent != null)
+                {
+                    Vector3 direction = parent.transform.position - body.transform.position;
+                    float distanceSqr = direction.sqrMagnitude;
+                    float distance = Mathf.Sqrt(distanceSqr);
+
+                    if (distance > 0.1f)
+                    {
+                        float accel = gravitationalConstant * parent.mass / distanceSqr;
+                        totalAcceleration = direction.normalized * accel;
+                    }
+                }
+
+                totalAcceleration += CalculateAcceleration(
+                    body.orbitAround.GetComponent<CelestialBody>()
+                );
+            }
+
+            return totalAcceleration;
+        }
+
         foreach (CelestialBody otherBody in bodies)
         {
             if (body == otherBody) continue;
-            if (onlySunGravity && !otherBody.isSun) continue;
+
+            if (!otherBody.isSun) continue;
+
             Vector3 direction = otherBody.transform.position - body.transform.position;
-            float distanceSqr = direction.sqrMagnitude;
-            
+            float distanceSqr = direction.sqrMagnitude;            
             distanceSqr += softeningFactor * softeningFactor;
 
             float distance = Mathf.Sqrt(distanceSqr);

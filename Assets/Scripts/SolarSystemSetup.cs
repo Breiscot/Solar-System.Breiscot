@@ -8,7 +8,7 @@ public class SolarSystemSetup : MonoBehaviour
 
         CreatePlanet("Mercury",     1f,    0.4f,   25f,    new Color(0.7f, 0.7f, 0.7f));
         CreatePlanet("Venus",       3f,    0.9f,   40f,    new Color(0.9f, 0.7f, 0.3f));
-        CreatePlanet("Earth",       3f,    1.0f,   55f,    new Color(0.2f, 0.5f, 1.0f));
+        CreatePlanet("Earth",       500f,  1.0f,   55f,    new Color(0.2f, 0.5f, 1.0f));
         CreatePlanet("Mars",        2f,    0.7f,   75f,    new Color(0.9f, 0.3f, 0.2f));
         CreatePlanet("Jupiter",     20f,   3.0f,   120f,   new Color(0.8f, 0.6f, 0.4f));
         CreatePlanet("Saturn",      15f,   2.5f,   170f,   new Color(0.9f, 0.8f, 0.5f));
@@ -18,7 +18,7 @@ public class SolarSystemSetup : MonoBehaviour
         CreateMoon("Moon", 0.1f, 0.3f, "Earth", 4f, new Color(0.8f, 0.8f, 0.8f));
     }
 
-    Material CreateMaterial(Color color, bool emissive)
+    Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
     {
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
 
@@ -133,6 +133,7 @@ public class SolarSystemSetup : MonoBehaviour
         body.drawOrbitPath = true;
         body.trailLength = 15f;
         body.autoCalculateVelocity = true;
+        body.isMoon = true;
         body.orbitAround = parent.transform;
     }
 }
