@@ -9,7 +9,11 @@ public class GravityManager : MonoBehaviour
     [Header("Simulazione")]
     public float timeScale = 1f;
 
-    // Lista di tutti i corpi celesti
+    [Header("Stabilità")]
+    [Tooltip("Se attivo, i pianeti sentono solo la gravità del sole")]
+    public bool onlySunGravity = false;
+    public float softeningFactor = 1f;
+
     private List<CelestialBody> bodies = new List<CelestialBody>();
     private bool initialized = false;
 
@@ -35,30 +39,24 @@ public class GravityManager : MonoBehaviour
     void FixedUpdate()
     {
         if (!initialized) return;
-        
+
         float timeStep = Time.fixedDeltaTime * timeScale;
 
         // Aggiorna posizioni usando la velocità e accelerazione attuale
         foreach (CelestialBody body in bodies)
         {
+            if (body.isStatic) continue;
             body.transform.position += body.currentVelocity * timeStep + 0.5f * body.currentAcceleration * timeStep * timeStep;
         }
 
         // Calcola le nuove accelerazioni    
         foreach (CelestialBody body in bodies)
         {
+            if (body.isStatic) continue;
             Vector3 newAcceleration = CalculateAcceleration(body);
-
-            // Aggiorna velocità usando media delle accelerazioni
             body.currentVelocity += 0.5f * (body.currentAcceleration + newAcceleration) * timeStep;
-
             body.currentAcceleration = newAcceleration;
         }  
-
-        foreach (CelestialBody body in bodies)
-        {
-            body.UpdateTrail();
-        }
     }
 
     Vector3 CalculateAcceleration(CelestialBody body)
@@ -68,12 +66,15 @@ public class GravityManager : MonoBehaviour
         foreach (CelestialBody otherBody in bodies)
         {
             if (body == otherBody) continue;
+            if (onlySunGravity && !otherBody.isSun) continue;
             Vector3 direction = otherBody.transform.position - body.transform.position;
-            float distance = direction.magnitude;
+            float distanceSqr = direction.sqrMagnitude;
             
-            if (distance < 0.5f) continue;
+            distanceSqr += softeningFactor * softeningFactor;
 
-            float accelerationMagnitude = gravitationalConstant * otherBody.mass / (distance * distance);
+            float distance = Mathf.Sqrt(distanceSqr);
+            float accelerationMagnitude = gravitationalConstant * otherBody.mass / distanceSqr;
+
             totalAcceleration += direction.normalized * accelerationMagnitude;
         }
         

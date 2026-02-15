@@ -269,11 +269,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 630308d657f8f244aab823435361f72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  freeCamera: 0
   target: {fileID: 0}
-  zoomSpeed: 100
-  rotationSpeed: 100
+  followZoomSpeed: 20
+  followRotationSpeed: 0.3
   minDistance: 5
   maxDistance: 500
+  moveSpeed: 50
+  fastMoveSpeed: 150
+  freeLookSpeed: 0.2
 --- !u!1 &637510503
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,6 +371,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GravityManager
   gravitationalConstant: 0.1
   timeScale: 1
+  onlySunGravity: 1
+  softeningFactor: 1
 --- !u!1 &1942473324
 GameObject:
   m_ObjectHideFlags: 0

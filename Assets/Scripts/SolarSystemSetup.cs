@@ -6,16 +6,16 @@ public class SolarSystemSetup : MonoBehaviour
     {
         CreateSun();
 
-        CreatePlanet("Mercury",     20f,    0.4f,   20f,    new Color(0.7f, 0.7f, 0.7f));
-        CreatePlanet("Venus",       80f,    0.9f,   35f,    new Color(0.9f, 0.7f, 0.3f));
-        CreatePlanet("Earth",       100f,   1.0f,   50f,    new Color(0.2f, 0.5f, 1.0f));
-        CreatePlanet("Mars",        60f,    0.7f,   70f,    new Color(0.9f, 0.3f, 0.2f));
-        CreatePlanet("Jupiter",     500f,   3.0f,   110f,   new Color(0.8f, 0.6f, 0.4f));
-        CreatePlanet("Saturn",      400f,   2.5f,   150f,   new Color(0.9f, 0.8f, 0.5f));
-        CreatePlanet("Uranus",      200f,   1.8f,   200f,   new Color(0.5f, 0.8f, 0.9f));
-        CreatePlanet("Neptune",     200f,   1.7f,   250f,   new Color(0.3f, 0.4f, 0.9f));
+        CreatePlanet("Mercury",     1f,    0.4f,   25f,    new Color(0.7f, 0.7f, 0.7f));
+        CreatePlanet("Venus",       3f,    0.9f,   40f,    new Color(0.9f, 0.7f, 0.3f));
+        CreatePlanet("Earth",       3f,    1.0f,   55f,    new Color(0.2f, 0.5f, 1.0f));
+        CreatePlanet("Mars",        2f,    0.7f,   75f,    new Color(0.9f, 0.3f, 0.2f));
+        CreatePlanet("Jupiter",     20f,   3.0f,   120f,   new Color(0.8f, 0.6f, 0.4f));
+        CreatePlanet("Saturn",      15f,   2.5f,   170f,   new Color(0.9f, 0.8f, 0.5f));
+        CreatePlanet("Uranus",      8f,    1.8f,   230f,   new Color(0.5f, 0.8f, 0.9f));
+        CreatePlanet("Neptune",     8f,    1.7f,   280f,   new Color(0.3f, 0.4f, 0.9f));
 
-        CreateMoon("Moon", 10f, 0.3f, "Earth", 3f, new Color(0.8f, 0.8f, 0.8f));
+        CreateMoon("Moon", 0.1f, 0.3f, "Earth", 4f, new Color(0.8f, 0.8f, 0.8f));
     }
 
     Material CreateMaterial(Color color, bool emissive)
@@ -59,8 +59,10 @@ public class SolarSystemSetup : MonoBehaviour
 
         // Corpo celeste
         CelestialBody body = sun.AddComponent<CelestialBody>();
-        body.mass = 10000f;
+        body.mass = 100000f;
         body.radius = 5f;
+        body.isSun = true;
+        body.isStatic = true;
         body.drawOrbitPath = false;
         body.bodyColor = Color.yellow;
 
@@ -90,15 +92,16 @@ public class SolarSystemSetup : MonoBehaviour
         planet.name = name;
         planet.transform.position = position;
 
+        Renderer rend = planet.GetComponent<Renderer>();
+        rend.material = CreateMaterial(color, false);
+
         CelestialBody body = planet.AddComponent<CelestialBody>();
         body.mass = mass;
         body.radius = radius;
         body.bodyColor = color;
         body.orbitColor = color;
         body.drawOrbitPath = true;
-        body.trailLength = 50f;
-
-        // Calcolo automatico della velocità
+        body.trailLength = 80f;
         body.autoCalculateVelocity = true;
         body.orbitAround = GameObject.Find("Sun").transform;
 
@@ -119,14 +122,16 @@ public class SolarSystemSetup : MonoBehaviour
         moon.name = name;
         moon.transform.position = position;
 
+        Renderer rend = moon.GetComponent<Renderer>();
+        rend.material = CreateMaterial(color, false);
+
         CelestialBody body = moon.AddComponent<CelestialBody>();
         body.mass = mass;
         body.radius = radius;
         body.bodyColor = color;
         body.orbitColor = color;
         body.drawOrbitPath = true;
-        body.trailLength = 10f;
-
+        body.trailLength = 15f;
         body.autoCalculateVelocity = true;
         body.orbitAround = parent.transform;
     }

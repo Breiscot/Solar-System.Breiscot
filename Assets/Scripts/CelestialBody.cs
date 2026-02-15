@@ -6,6 +6,10 @@ public class CelestialBody : MonoBehaviour
     public float mass = 1000f;
     public float radius = 1f;
 
+    [Header("Tipo")]
+    public bool isSun = false;
+    public bool isStatic = false;
+
     [Header("Orbita")]
     public bool autoCalculateVelocity = false;
     public Transform orbitAround;
@@ -27,13 +31,6 @@ public class CelestialBody : MonoBehaviour
     {
         transform.localScale = Vector3.one * radius * 2;
 
-        // Colore
-        Renderer rend = GetComponent<Renderer>();
-        if (rend != null)
-        {
-            rend.material.color = bodyColor;
-        }
-
         // Imposta la velocità orbitale automatica
         if (autoCalculateVelocity && orbitAround != null)
         {
@@ -45,7 +42,7 @@ public class CelestialBody : MonoBehaviour
         }
 
         // Setup del dell'orbita
-        if (drawOrbitPath)
+        if (drawOrbitPath && !isSun)
         {
             SetupTrail();
         }
@@ -69,7 +66,11 @@ public class CelestialBody : MonoBehaviour
 
         Vector3 tangent = new Vector3(-direction.normalized.z, 0, direction.normalized.x);
         currentVelocity = tangent * orbitalSpeed;
-        currentVelocity += otherBody.currentVelocity;
+
+        if (!otherBody.isStatic)
+        {
+            currentVelocity += otherBody.currentVelocity;
+        }
 
         Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed + ", distanza =" + distance);
     }
@@ -77,32 +78,19 @@ public class CelestialBody : MonoBehaviour
     void SetupTrail()
     {
         TrailRenderer trail = gameObject.AddComponent<TrailRenderer>();
-
         trail.time = trailLength;
         trail.startWidth = 0.15f;
         trail.endWidth = 0.02f;
 
-        // Colore: pieno all'inizio, trasparente alla fine
         Color startColor = orbitColor;
         Color endColor = orbitColor;
         endColor.a = 0f;
 
         trail.startColor = startColor;
         trail.endColor = endColor;
-
-        // Materiale semplice
         trail.material = new Material(Shader.Find("Sprites/Default"));
-
-        // Non viene influenzato dalle ombre
         trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         trail.receiveShadows = false;
-
-        trail.minVertexDistance = 0.5f;
-    }
-
-    // Chiamato dal GravityManager
-    public void UpdateTrail()
-    {
-        // Il TrailRenderer si aggiorna automaticamente
+        trail.minVertexDistance = 0.3f;
     }
 }
