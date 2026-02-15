@@ -18,6 +18,39 @@ public class SolarSystemSetup : MonoBehaviour
         CreateMoon("Moon", 10f, 0.3f, "Earth", 3f, new Color(0.8f, 0.8f, 0.8f));
     }
 
+    Material CreateMaterial(Color color, bool emissive)
+    {
+        Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+
+        if (shader == null)
+            shader = Shader.Find("Standard");
+        
+        if (shader == null)
+            shader = Shader.Find("Sprites/Default");
+
+        Material mat = new Material(shader);
+        mat.color = color;
+
+        if (mat.HasProperty("_BaseColor"))
+            mat.SetColor("_BaseColor", color);
+
+        if (emissive)
+        {
+            if (mat.HasProperty("_EmissionColor"))
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", color * 2f);
+            }
+
+            if (mat.HasProperty("_EmissiveColor"))
+            {
+                mat.SetColor("_EmissiveColor", color * 2f);
+            }
+        }
+
+        return mat;
+    }
+
     void CreateSun()
     {
         GameObject sun = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -33,11 +66,7 @@ public class SolarSystemSetup : MonoBehaviour
 
         // Materiale luminoso per il sole
         Renderer rend = sun.GetComponent<Renderer>();
-        Material sunMat = new Material(Shader.Find("Standard"));
-        sunMat.color = Color.yellow;
-        sunMat.EnableKeyword("_EMISSION");
-        sunMat.SetColor("_EmissionColor", Color.yellow * 2f);
-        rend.material = sunMat;
+        rend.material = CreateMaterial(Color.yellow, true);
 
         // Luce del sole
         Light sunLight = sun.AddComponent<Light>();

@@ -11,8 +11,14 @@ public class GravityManager : MonoBehaviour
 
     // Lista di tutti i corpi celesti
     private List<CelestialBody> bodies = new List<CelestialBody>();
+    private bool initialized = false;
 
     void Start()
+    {
+        Invoke("Initialize", 0.5f);
+    }
+
+    void Initialize()
     {
         // Trova tutti i corpi celesti
         bodies.AddRange(FindObjectsOfType<CelestialBody>());
@@ -22,10 +28,14 @@ public class GravityManager : MonoBehaviour
         {
             body.currentAcceleration = CalculateAcceleration(body);
         }
+
+        initialized = true;
     }
 
     void FixedUpdate()
     {
+        if (!initialized) return;
+        
         float timeStep = Time.fixedDeltaTime * timeScale;
 
         // Aggiorna posizioni usando la velocità e accelerazione attuale
