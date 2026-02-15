@@ -17,44 +17,56 @@ public class GravityManager : MonoBehaviour
         // Trova tutti i corpi celesti
         bodies.AddRange(FindObjectsOfType<CelestialBody>());
         Debug.Log($"Trovati " + bodies.Count + "corpi celesti");
+
+        foreach (CelestialBody body in bodies)
+        {
+            body.currentAcceleration = CalculateAcceleration(body);
+        }
     }
 
     void FixedUpdate()
     {
         float timeStep = Time.fixedDeltaTime * timeScale;
 
-        // Prima calcola tutte le accelerazioni
+        // Aggiorna posizioni usando la velocità e accelerazione attuale
         foreach (CelestialBody body in bodies)
         {
-            Vector3 totalAcceleration = Vector3.zero;
+            body.transform.position += body.currentVelocity * timeStep + 0.5f * body.currentAcceleration * timeStep * timeStep;
+        }
+
+        // Calcola le nuove accelerazioni    
+        foreach (CelestialBody body in bodies)
+        {
+            Vector3 newAcceleration = CalculateAcceleration(body);
+
+            // Aggiorna velocità usando media delle accelerazioni
+            body.currentVelocity += 0.5f * (body.currentAcceleration + newAcceleration) * timeStep;
+
+            body.currentAcceleration = newAcceleration;
+        }  
+
+        foreach (CelestialBody body in bodies)
+        {
+            body.UpdateTrail();
+        }
+    }
+
+    Vector3 CalculateAcceleration(CelestialBody body)
+    {
+        Vector3 totalAcceleration = Vector3.zero;
+
+        foreach (CelestialBody otherBody in bodies)
+        {
+            if (body == otherBody) continue;
+            Vector3 direction = otherBody.transform.position - body.transform.position;
+            float distance = direction.magnitude;
             
-            foreach (CelestialBody otherBody in bodies)
-            {
-                // Non calcolare la gravità su se stesso
-                if (body == otherBody) continue;
+            if (distance < 0.5f) continue;
 
-                // Calcola la forza gravitazionale
-                Vector3 direction = otherBody.transform.position - body.transform.position;
-                float distance = direction.magnitude;
-
-                // Evita divisione per zero
-                if (distance < 0.1f) continue;
-
-                // Formula di Newton: F = G * (m1 * m2) / r²
-                // Accelerazione: a = F / m1 = G * m2 / r²
-                float accelerationMagnitude = gravitationalConstant * otherBody.mass / (distance * distance);
-
-                // Direzione normalizzata * magnitudine
-                totalAcceleration += direction.normalized * accelerationMagnitude;
-            }
-
-            // Applica l'accelerazione al corpo
-            body.currentVelocity += totalAcceleration * timeStep;
+            float accelerationMagnitude = gravitationalConstant * otherBody.mass / (distance * distance);
+            totalAcceleration += direction.normalized * accelerationMagnitude;
         }
-
-        foreach (CelestialBody body in bodies)
-        {
-            body.UpdatePosition(timeStep);
-        }
+        
+        return totalAcceleration;
     }
 }

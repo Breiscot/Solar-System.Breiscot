@@ -20,10 +20,11 @@ public class CelestialBody : MonoBehaviour
     // Velocità corrente (per il GravityManager é pubblica)
     [HideInInspector]
     public Vector3 currentVelocity;
+    [HideInInspector]
+    public Vector3 currentAcceleration;
 
     void Start()
     {
-         // Scala l'oggetto
         transform.localScale = Vector3.one * radius * 2;
 
         // Colore
@@ -70,7 +71,7 @@ public class CelestialBody : MonoBehaviour
         currentVelocity = tangent * orbitalSpeed;
         currentVelocity += otherBody.currentVelocity;
 
-        Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed);
+        Debug.Log(gameObject.name + ": velocità = " + orbitalSpeed + ", distanza =" + distance);
     }
 
     void SetupTrail()
@@ -78,9 +79,8 @@ public class CelestialBody : MonoBehaviour
         TrailRenderer trail = gameObject.AddComponent<TrailRenderer>();
 
         trail.time = trailLength;
-
-        trail.startWidth = 0.2f;
-        trail.endWidth = 0.05f;
+        trail.startWidth = 0.15f;
+        trail.endWidth = 0.02f;
 
         // Colore: pieno all'inizio, trasparente alla fine
         Color startColor = orbitColor;
@@ -101,8 +101,8 @@ public class CelestialBody : MonoBehaviour
     }
 
     // Chiamato dal GravityManager
-    public void UpdatePosition(float timeStep)
+    public void UpdateTrail()
     {
-        transform.position += currentVelocity * timeStep;
+        // Il TrailRenderer si aggiorna automaticamente
     }
 }

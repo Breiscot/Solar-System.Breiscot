@@ -15,7 +15,7 @@ public class SolarSystemSetup : MonoBehaviour
         CreatePlanet("Uranus",      200f,   1.8f,   200f,   new Color(0.5f, 0.8f, 0.9f));
         CreatePlanet("Neptune",     200f,   1.7f,   250f,   new Color(0.3f, 0.4f, 0.9f));
 
-        CreateMoon("Moon", 10f, 0.3f, "Earth", 5f, new Color(0.8f, 0.8f, 0.8f));
+        CreateMoon("Moon", 10f, 0.3f, "Earth", 3f, new Color(0.8f, 0.8f, 0.8f));
     }
 
     void CreateSun()
@@ -72,6 +72,11 @@ public class SolarSystemSetup : MonoBehaviour
         // Calcolo automatico della velocità
         body.autoCalculateVelocity = true;
         body.orbitAround = GameObject.Find("Sun").transform;
+
+        if (name == "Saturn")
+        {
+            planet.AddComponent<SaturnRings>();
+        }
     }
 
     void CreateMoon(string name, float mass, float radius, string parentName, float distance, Color color)
