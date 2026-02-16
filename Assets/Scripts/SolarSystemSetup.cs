@@ -21,31 +21,64 @@ public class SolarSystemSetup : MonoBehaviour
     Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
     {
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-
         if (shader == null)
             shader = Shader.Find("Standard");
-        
         if (shader == null)
             shader = Shader.Find("Sprites/Default");
 
         Material mat = new Material(shader);
-        mat.color = color;
+        
+        Texture2D texture = Resources.Load<Texture2D>("Textures/" + planetName);
 
-        if (mat.HasProperty("_BaseColor"))
-            mat.SetColor("_BaseColor", color);
+        if (texture != null)
+        {
+            Debug.Log(planetName + ": texture caricata.");
+
+            mat.mainTexture = texture;
+
+            if (mat.HasProperty("_BaseMap"))
+                mat.SetTexture("_BaseMap", texture);
+
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", Color.white);
+
+            mat.color = Color.white;
+        }
+        else
+        {
+            Debug.LogWarning(planetName + ": texture non trovata in Resources/Textures/" + planetName + " - uso colore");
+
+            mat.color = fallbackColor;
+            
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", fallbackColor);
+        }
 
         if (emissive)
         {
-            if (mat.HasProperty("_EmissionColor"))
+            mat.EnableKeyword("_EMISSION");
+
+            if (texture != null)
             {
-                mat.EnableKeyword("_EMISSION");
-                mat.SetColor("_EmissionColor", color * 2f);
+                if (mat.HasProperty("_EmissionMap"))
+                    mat.SetTexture("_EmissionMap", texture);
+
+                if (mat.HasProperty("_EmissionColor"))
+                    mat.SetColor("_EmissionColor", Color.white * 1.5f);
+            }
+            else
+            {
+                if (mat.HasProperty("_EmissionColor"))
+                    mat.SetColor("_EmissionColor", fallbackColor * 2f);
             }
 
             if (mat.HasProperty("_EmissiveColor"))
-            {
-                mat.SetColor("_EmissiveColor", color * 2f);
-            }
+                mat.SetColor("_EmissiveColor", Color.white * 1.5f);
+        }
+
+        if (texture != null)
+        {
+            texture.filterMode = FilterMode.Bilinear;
         }
 
         return mat;
@@ -68,7 +101,7 @@ public class SolarSystemSetup : MonoBehaviour
 
         // Materiale luminoso per il sole
         Renderer rend = sun.GetComponent<Renderer>();
-        rend.material = CreateMaterial(Color.yellow, true);
+        rend.material = CreateMaterial("Sun", Color.yellow, true);
 
         // Luce del sole
         Light sunLight = sun.AddComponent<Light>();
@@ -93,7 +126,7 @@ public class SolarSystemSetup : MonoBehaviour
         planet.transform.position = position;
 
         Renderer rend = planet.GetComponent<Renderer>();
-        rend.material = CreateMaterial(color, false);
+        rend.material = CreateMaterial(name, color, false);
 
         CelestialBody body = planet.AddComponent<CelestialBody>();
         body.mass = mass;
@@ -104,6 +137,8 @@ public class SolarSystemSetup : MonoBehaviour
         body.trailLength = 80f;
         body.autoCalculateVelocity = true;
         body.orbitAround = GameObject.Find("Sun").transform;
+
+        planet.AddComponent<PlanetRotation>();
 
         if (name == "Saturn")
         {
@@ -123,7 +158,7 @@ public class SolarSystemSetup : MonoBehaviour
         moon.transform.position = position;
 
         Renderer rend = moon.GetComponent<Renderer>();
-        rend.material = CreateMaterial(color, false);
+        rend.material = CreateMaterial(name, color, false);
 
         CelestialBody body = moon.AddComponent<CelestialBody>();
         body.mass = mass;
@@ -135,5 +170,7 @@ public class SolarSystemSetup : MonoBehaviour
         body.autoCalculateVelocity = true;
         body.isMoon = true;
         body.orbitAround = parent.transform;
+
+        moon.AddComponent<PlanetRotation>();
     }
 }
