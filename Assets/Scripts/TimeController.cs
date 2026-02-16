@@ -22,7 +22,7 @@ public class TimeController : MonoBehaviour
     void Initialize()
     {
         gravityManager = FindObjectOfType<GravityManager>();
-        allRotations = FindObjectOfType<PlanetRotation>();
+        allRotations = FindObjectsOfType<PlanetRotation>();
 
         // Crea UI
         if (timeText == null)
@@ -119,9 +119,51 @@ public class TimeController : MonoBehaviour
     {
         // Crea Canvas
         GameObject canvasObj = new GameObject("TimeCanvas");
-        Canvas.canvas = canvasObj.AddComponent<Canvas>();
+        Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
         canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>();
+
+        // Pannello sfondo
+        GameObject panel = new GameObject("Panel");
+        panel.transform.SetParent(canvasObj.transform, false);
+        UnityEngine.UI.Image panelImage = panel.AddComponent<UnityEngine.UI.Image>();
+        panelImage.color = new Color(0, 0, 0, 0.5f);
+
+        RectTransform panelRect = panel.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.35f, 0.92f);
+        panelRect.anchorMax = new Vector2(0.65f, 1f);
+        panelRect.offsetMin = Vector2.zero;
+        panelRect.offsetMax = Vector2.zero;
+
+        // Tasto velocità
+        GameObject textObj = new GameObject("TimeText");
+        textObj.transform.SetParent(panel.transform, false);
+        timeText = textObj.AddComponent<TextMeshProUGUI>();
+        timeText.text = "⏩ 1x";
+        timeText.fontSize = 24;
+        timeText.color = Color.white;
+        timeText.alignment = TextAlignmentOptions.Center;
+
+        RectTransform textRect = textObj.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = Vector2.zero;
+        textRect.offsetMax = Vector2.zero;
+
+        // Tasto istruzioni
+        GameObject helpObj = new GameObject("HelpText");
+        helpObj.transform.SetParent(canvasObj.transform, false);
+        TextMeshProUGUI helpText = helpObj.AddComponent<TextMeshProUGUI>();
+        helpText.text = "↕️ Velocità | SPAZIO Pausa | TAB Camera | F Target";
+        helpText.fontSize = 16;
+        helpText.color = new Color(1, 1, 1, 0.6f);
+        helpText.alignment = TextAlignmentOptions.Center;
+
+        RectTransform helpRect = helpObj.GetComponent<RectTransform>();
+        helpRect.anchorMin = new Vector2(0.1f, 0.88f);
+        helpRect.anchorMax = new Vector2(0.9f, 0.92f);
+        helpRect.offsetMin = Vector2.zero;
+        helpRect.offsetMax = Vector2.zero;
     }
 }

@@ -48,7 +48,10 @@ public class GravityManager : MonoBehaviour
         // Calcola le accelerazioni iniziali
         foreach (CelestialBody body in bodies)
         {
-            body.currentAcceleration = CalculateAcceleration(body);
+            if (!body.isSun)
+            {
+                body.currentAcceleration = CalculateAcceleration(body);
+            }
         }
 
         initialized = true;
@@ -60,11 +63,20 @@ public class GravityManager : MonoBehaviour
 
         float timeStep = Time.fixedDeltaTime * timeScale;
 
+        // Muove il sole con la velocità galattica
+        foreach (CelestialBody body in bodies)
+        {
+            if (body.isSun)
+            {
+                body.transform.position += body.currentVelocity * timeStep;
+            }
+        }
+
         // Aggiorna posizioni usando la velocità e accelerazione attuale
         foreach (CelestialBody body in bodies)
         {
-            if (body.isStatic) continue;
-            body.transform.position += body.currentVelocity * timeStep + 0.5f * body.currentAcceleration * timeStep * timeStep;
+            if (body.isSun) continue;
+            body.transform.position += body.currentVelocity * timeStep + 0.5f * body.currentAcceleration * timeStep * timeStep; 
         }
 
         // Calcola le nuove accelerazioni    

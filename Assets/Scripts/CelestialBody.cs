@@ -16,6 +16,9 @@ public class CelestialBody : MonoBehaviour
     public Transform orbitAround;
     public Vector3 initialVelocity;
 
+    [Header("Movimento Galattico (solo Sole)")]
+    public Vector3 galacticVelocity = Vector3.zero;
+
     [Header("Visualizzazione")]
     public Color bodyColor = Color.white;
     public Color orbitColor = Color.white;
@@ -35,6 +38,11 @@ public class CelestialBody : MonoBehaviour
         if (!autoCalculateVelocity)
         {
             currentVelocity = initialVelocity;
+        }
+
+        if (isSun)
+        {
+            currentVelocity = galacticVelocity;
         }
 
         if (drawOrbitPath && !isSun)
