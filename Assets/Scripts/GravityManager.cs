@@ -12,9 +12,12 @@ public class GravityManager : MonoBehaviour
     [Header("Stabilità")]
     [Tooltip("Se attivo, i pianeti sentono solo la gravità del sole")]
     public float softeningFactor = 0.5f;
+    public int maxSubSteps = 200;
 
     private List<CelestialBody> bodies = new List<CelestialBody>();
     private bool initialized = false;
+
+    private float baseTimeStep = 0.005f;
 
     void Start()
     {
@@ -60,31 +63,43 @@ public class GravityManager : MonoBehaviour
     void FixedUpdate()
     {
         if (!initialized) return;
+        if (timeScale <= 0) return;
 
-        float timeStep = Time.fixedDeltaTime * timeScale;
+        float totalTime = Time.fixedDeltaTime * timeScale;
+        int subSteps = Mathf.CeilToInt(totalTime / baseTimeStep);
+        subSteps = Mathf.Clamp(subSteps, 1, maxSubSteps);
+        float dt = totalTime / subSteps;
 
+        for (int step = 0; step < subSteps; step++)
+        {
+            DoPhysicsStep(dt);
+        }
+    }
+
+    void DoPhysicsStep(float dt)
+    {
         // Muove il sole con la velocità galattica
         foreach (CelestialBody body in bodies)
         {
             if (body.isSun)
             {
-                body.transform.position += body.currentVelocity * timeStep;
+                body.transform.position += body.currentVelocity * dt;
             }
         }
 
-        // Aggiorna posizioni usando la velocità e accelerazione attuale
+        // Aggiorna posizioni pianeti e luna
         foreach (CelestialBody body in bodies)
         {
             if (body.isSun) continue;
-            body.transform.position += body.currentVelocity * timeStep + 0.5f * body.currentAcceleration * timeStep * timeStep; 
+            body.transform.position += body.currentVelocity * dt + 0.5f * body.currentAcceleration * dt * dt; 
         }
 
         // Calcola le nuove accelerazioni    
         foreach (CelestialBody body in bodies)
         {
-            if (body.isStatic) continue;
+            if (body.isSun) continue;
             Vector3 newAcceleration = CalculateAcceleration(body);
-            body.currentVelocity += 0.5f * (body.currentAcceleration + newAcceleration) * timeStep;
+            body.currentVelocity += 0.5f * (body.currentAcceleration + newAcceleration) * dt;
             body.currentAcceleration = newAcceleration;
         }  
     }
@@ -102,18 +117,30 @@ public class GravityManager : MonoBehaviour
                 {
                     Vector3 direction = parent.transform.position - body.transform.position;
                     float distanceSqr = direction.sqrMagnitude;
-                    float distance = Mathf.Sqrt(distanceSqr);
 
-                    if (distance > 0.1f)
+                    if (distanceSqr > 0.01f)
                     {
                         float accel = gravitationalConstant * parent.mass / distanceSqr;
                         totalAcceleration = direction.normalized * accel;
                     }
                 }
 
-                totalAcceleration += CalculateAcceleration(
-                    body.orbitAround.GetComponent<CelestialBody>()
-                );
+                // Accelerazione del genitore
+                CelestialBody parentBody = body.orbitAround.GetComponent<CelestialBody>();
+                if (parentBody != null && !parentBody.isMoon)
+                {
+                    foreach (CelestialBody otherBody in bodies)
+                    {
+                        if (otherBody.isSun)
+                        {
+                            Vector3 dir = otherBody.transform.position - parentBody.transform.position;
+                            float dSqr = dir.sqrMagnitude;
+                            dSqr += softeningFactor * softeningFactor;
+                            float acc = gravitationalConstant * otherBody.mass / dSqr;
+                            totalAcceleration += dir.normalized * acc;
+                        }
+                    }
+                }
             }
 
             return totalAcceleration;
@@ -122,16 +149,13 @@ public class GravityManager : MonoBehaviour
         foreach (CelestialBody otherBody in bodies)
         {
             if (body == otherBody) continue;
-
             if (!otherBody.isSun) continue;
 
             Vector3 direction = otherBody.transform.position - body.transform.position;
             float distanceSqr = direction.sqrMagnitude;            
             distanceSqr += softeningFactor * softeningFactor;
 
-            float distance = Mathf.Sqrt(distanceSqr);
             float accelerationMagnitude = gravitationalConstant * otherBody.mass / distanceSqr;
-
             totalAcceleration += direction.normalized * accelerationMagnitude;
         }
         
