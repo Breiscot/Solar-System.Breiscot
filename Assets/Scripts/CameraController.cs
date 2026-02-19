@@ -170,8 +170,8 @@ public class CameraController : MonoBehaviour
         if (keyboard.sKey.isPressed) move -= transform.forward;
         if (keyboard.aKey.isPressed) move -= transform.right;
         if (keyboard.dKey.isPressed) move += transform.right;
-        if (keyboard.spaceKey.isPressed) move += Vector3.up;
-        if (keyboard.leftCtrlKey.isPressed) move += Vector3.up;
+        if (keyboard.eKey.isPressed) move += Vector3.up;
+        if (keyboard.qKey.isPressed) move -= Vector3.up;
 
         transform.position += move.normalized * speed * Time.deltaTime;
     }
