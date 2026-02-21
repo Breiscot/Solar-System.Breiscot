@@ -155,7 +155,7 @@ public class TimeController : MonoBehaviour
         GameObject helpObj = new GameObject("HelpText");
         helpObj.transform.SetParent(canvasObj.transform, false);
         TextMeshProUGUI helpText = helpObj.AddComponent<TextMeshProUGUI>();
-        helpText.text = "↕ Velocità | SPAZIO Pausa | TAB Camera | F Target";
+        helpText.text = "↕ Velocità | SPAZIO Pausa | TAB Camera | F Target | G Griglia";
         helpText.fontSize = 16;
         helpText.color = new Color(1, 1, 1, 0.6f);
         helpText.alignment = TextAlignmentOptions.Center;

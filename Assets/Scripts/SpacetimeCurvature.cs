@@ -46,7 +46,7 @@ public class SpacetimeCurvature : MonoBehaviour
         }
 
         gridParent = new GameObject("SpacetimeGrid");
-        gridParent.trasform.parent = transform;
+        gridParent.transform.parent = transform;
 
         CreateGridLines();
         initialized = true;
@@ -59,6 +59,13 @@ public class SpacetimeCurvature : MonoBehaviour
         lineMat.color = gridColor;
 
         numLines = Mathf.CeilToInt(gridExtent * 2f / cellSize) + 1;
+
+        for (int i = 0; i < numLines; i++)
+        {
+            LineRenderer lr = CreateLine("LineX_" + i, lineMat);
+            lr.positionCount = pointsPerLine;
+            linesX.Add(lr);
+        }
 
         for (int i = 0; i < numLines; i++)
         {
@@ -88,7 +95,7 @@ public class SpacetimeCurvature : MonoBehaviour
 
     void Update()
     {
-        if (!intialized) return;
+        if (!initialized) return;
 
         Keyboard keyboard = Keyboard.current;
         if (keyboard != null && keyboard.gKey.wasPressedThisFrame)
@@ -154,6 +161,26 @@ public class SpacetimeCurvature : MonoBehaviour
 
     float CalculateDepth(float x, float z)
     {
-        
+        float totalDepth = 0f;
+
+        foreach (CelestialBody body in bodies)
+        {
+            if (body == null) continue;
+
+            Vector3 pos = body.transform.position;
+            float dx = x - pos.x;
+            float dz = z - pos.z;
+            float distance = Mathf.Sqrt(dx * dx + dz * dz);
+
+            // Curvatura con più massa, é più profondo, invece più vicino é più profondo
+            float depth = curvatureStrength * body.mass / (distance + softeningDistance);
+
+            totalDepth += depth;
+        }
+
+        // Limita la profondità massima
+        totalDepth = Mathf.Min(totalDepth, maxDepth);
+
+        return -totalDepth;
     }
 }

@@ -428,6 +428,58 @@ MonoBehaviour:
   timeScale: 1
   softeningFactor: 1
   maxSubSteps: 200
+--- !u!1 &1928529889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1928529891}
+  - component: {fileID: 1928529890}
+  m_Layer: 0
+  m_Name: SpacetimeCurvature
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1928529890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928529889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea086c8242ab104e9f3cfc34ddd0647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpacetimeCurvature
+  gridExtent: 300
+  cellSize: 15
+  pointsPerLine: 80
+  curvatureStrength: 0.003
+  maxDepth: 30
+  softeningDistance: 5
+  gridColor: {r: 0, g: 0.8, b: 1, a: 0.3}
+  lineWidth: 0.1
+--- !u!4 &1928529891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928529889}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -109.31616, y: 0, z: 1.53938}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1942473324
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,3 +533,4 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 637510504}
   - {fileID: 324189119}
+  - {fileID: 1928529891}
