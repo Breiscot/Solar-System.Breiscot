@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Scene
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -1179,9 +1179,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -102.2928, y: 1.6621642, z: 0.95691967}
+    m_Target: {x: -52.420803, y: 0.058419228, z: 15.265498}
     speed: 2
-    m_Value: {x: -102.2928, y: 1.6621642, z: 0.95691967}
+    m_Value: {x: -52.420803, y: 0.058419228, z: 15.265498}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1227,9 +1227,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.482
   m_Rotation:
-    m_Target: {x: 0.0850911, y: -0.6727458, z: 0.078185715, w: 0.73086566}
+    m_Target: {x: 0.0778511, y: -0.7267611, z: 0.0833699, w: 0.67743134}
     speed: 2
-    m_Value: {x: -0.0850911, y: 0.6727458, z: -0.078185715, w: -0.73086566}
+    m_Value: {x: -0.0778511, y: 0.7267611, z: -0.0833699, w: -0.67743134}
   m_Size:
     m_Target: 10
     speed: 2
@@ -1373,13 +1373,13 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 60}
     m_SelectedIDs:
-    - m_Data: 46312
+    - m_Data: 46308
     m_LastClickedID:
-      m_Data: 46312
+      m_Data: 46308
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45982
-    - m_Data: 45984
+    - m_Data: 45986
+    - m_Data: 45988
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1412,8 +1412,8 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45982
-    - m_Data: 45984
+    - m_Data: 45986
+    - m_Data: 45988
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1440,10 +1440,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs:
-    - m_Data: 19854
-    m_LastClickedInstanceID: 19854
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: []
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
       m_UserAcceptedRename: 0

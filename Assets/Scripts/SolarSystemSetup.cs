@@ -5,17 +5,17 @@ public class SolarSystemSetup : MonoBehaviour
     void Start()
     {
         CreateSun();
+                    // Name        Massa | Raggio | Dist | Colore                          Tilt | Rot.Speed
+        CreatePlanet("Mercury",     1f,    0.4f,   25f,    new Color(0.7f, 0.7f, 0.7f),     0.03f,  15f);
+        CreatePlanet("Venus",       3f,    0.9f,   40f,    new Color(0.9f, 0.7f, 0.3f),     177f,   -5f);
+        CreatePlanet("Earth",       500f,  1.0f,   55f,    new Color(0.2f, 0.5f, 1.0f),     23.4f,  60f);
+        CreatePlanet("Mars",        2f,    0.7f,   75f,    new Color(0.9f, 0.3f, 0.2f),     25.2f,  58f);
+        CreatePlanet("Jupiter",     20f,   3.0f,   120f,   new Color(0.8f, 0.6f, 0.4f),     3.1f,   150f);
+        CreatePlanet("Saturn",      15f,   2.5f,   170f,   new Color(0.9f, 0.8f, 0.5f),     26.7f,  140f);
+        CreatePlanet("Uranus",      8f,    1.8f,   230f,   new Color(0.5f, 0.8f, 0.9f),     97.8f,  80f);
+        CreatePlanet("Neptune",     8f,    1.7f,   280f,   new Color(0.3f, 0.4f, 0.9f),     28.3f,  90f);
 
-        CreatePlanet("Mercury",     1f,    0.4f,   25f,    new Color(0.7f, 0.7f, 0.7f));
-        CreatePlanet("Venus",       3f,    0.9f,   40f,    new Color(0.9f, 0.7f, 0.3f));
-        CreatePlanet("Earth",       500f,  1.0f,   55f,    new Color(0.2f, 0.5f, 1.0f));
-        CreatePlanet("Mars",        2f,    0.7f,   75f,    new Color(0.9f, 0.3f, 0.2f));
-        CreatePlanet("Jupiter",     20f,   3.0f,   120f,   new Color(0.8f, 0.6f, 0.4f));
-        CreatePlanet("Saturn",      15f,   2.5f,   170f,   new Color(0.9f, 0.8f, 0.5f));
-        CreatePlanet("Uranus",      8f,    1.8f,   230f,   new Color(0.5f, 0.8f, 0.9f));
-        CreatePlanet("Neptune",     8f,    1.7f,   280f,   new Color(0.3f, 0.4f, 0.9f));
-
-        CreateMoon("Moon", 0.1f, 0.3f, "Earth", 4f, new Color(0.8f, 0.8f, 0.8f));
+        CreateMoon("Moon", 0.1f, 0.3f, "Earth", 4f, new Color(0.8f, 0.8f, 0.8f), 6.7f, 20f);
     }
 
     Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
@@ -33,7 +33,6 @@ public class SolarSystemSetup : MonoBehaviour
         if (texture != null)
         {
             Debug.Log(planetName + ": texture caricata.");
-
             mat.mainTexture = texture;
 
             if (mat.HasProperty("_BaseMap"))
@@ -43,11 +42,11 @@ public class SolarSystemSetup : MonoBehaviour
                 mat.SetColor("_BaseColor", Color.white);
 
             mat.color = Color.white;
+            texture.filterMode = FilterMode.Bilinear;
         }
         else
         {
-            Debug.LogWarning(planetName + ": texture non trovata in Resources/Textures/" + planetName + " - uso colore");
-
+            Debug.LogWarning(planetName + ": texture non trovata, uso colore");
             mat.color = fallbackColor;
             
             if (mat.HasProperty("_BaseColor"))
@@ -64,21 +63,13 @@ public class SolarSystemSetup : MonoBehaviour
                     mat.SetTexture("_EmissionMap", texture);
 
                 if (mat.HasProperty("_EmissionColor"))
-                    mat.SetColor("_EmissionColor", Color.white * 1.5f);
+                    mat.SetColor("_EmissionColor", Color.white * 3f);
             }
             else
             {
                 if (mat.HasProperty("_EmissionColor"))
-                    mat.SetColor("_EmissionColor", fallbackColor * 2f);
+                    mat.SetColor("_EmissionColor", fallbackColor * 3f);
             }
-
-            if (mat.HasProperty("_EmissiveColor"))
-                mat.SetColor("_EmissiveColor", Color.white * 1.5f);
-        }
-
-        if (texture != null)
-        {
-            texture.filterMode = FilterMode.Bilinear;
         }
 
         return mat;
@@ -98,6 +89,12 @@ public class SolarSystemSetup : MonoBehaviour
         body.isStatic = true;
         body.drawOrbitPath = false;
         body.bodyColor = Color.yellow;
+        body.galacticVelocity = new Vector3(0, 0, 0.5f);
+
+        // Rotazione del sole
+        PlanetRotation rot = sun.AddComponent<PlanetRotation>();
+        rot.rotationSpeed = 3f;
+        rot.axialTilt = 7.25f;
 
         // Materiale luminoso per il sole
         Renderer rend = sun.GetComponent<Renderer>();
@@ -106,12 +103,15 @@ public class SolarSystemSetup : MonoBehaviour
         // Luce del sole
         Light sunLight = sun.AddComponent<Light>();
         sunLight.type = LightType.Point;
-        sunLight.intensity = 2f;
-        sunLight.range = 500f;
+        sunLight.intensity = 3f;
+        sunLight.range = 600f;
         sunLight.color = new Color (1f, 0.95f, 0.8f);
+
+        // Glow del sole
+        sun.AddComponent<SunGlow>();
     }
 
-    void CreatePlanet(string name, float mass, float radius, float distance, Color color)
+    void CreatePlanet(string name, float mass, float radius, float distance, Color color, float tilt, float rotSpeed)
     {
         // Angolo casuale per non avere tutti i pianeti in fila
         float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
@@ -138,7 +138,10 @@ public class SolarSystemSetup : MonoBehaviour
         body.autoCalculateVelocity = true;
         body.orbitAround = GameObject.Find("Sun").transform;
 
-        planet.AddComponent<PlanetRotation>();
+        // Rotazione realistica
+        PlanetRotation rot = planet.AddComponent<PlanetRotation>();
+        rot.rotationSpeed = rotSpeed;
+        rot.axialTilt = tilt;
 
         if (name == "Saturn")
         {
@@ -146,7 +149,7 @@ public class SolarSystemSetup : MonoBehaviour
         }
     }
 
-    void CreateMoon(string name, float mass, float radius, string parentName, float distance, Color color)
+    void CreateMoon(string name, float mass, float radius, string parentName, float distance, Color color, float tilt, float rotSpeed)
     {
         GameObject parent = GameObject.Find(parentName);
         if (parent == null) return;
@@ -171,6 +174,8 @@ public class SolarSystemSetup : MonoBehaviour
         body.isMoon = true;
         body.orbitAround = parent.transform;
 
-        moon.AddComponent<PlanetRotation>();
+        PlanetRotation rot = moon.AddComponent<PlanetRotation>();
+        rot.rotationSpeed = rotSpeed;
+        rot.axialTilt = tilt;
     }
 }

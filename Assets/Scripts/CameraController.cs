@@ -6,18 +6,17 @@ public class CameraController : MonoBehaviour
     [Header("Modalità")]
     public bool freeCamera = false;
 
-    [Header("Target (modalità follow)")]
+    [Header("Target")]
     public Transform target;
 
     [Header("Follow Camera")]
-    public float followZoomSpeed = 20f;
     public float followRotationSpeed = 0.3f;
-    public float minDistance = 5f;
-    public float maxDistance = 500f;
+    public float minDistance = 2f;
+    public float maxDistance = 800f;
 
     [Header("Free Camera")]
     public float moveSpeed = 50f;
-    public float fastMoveSpeed = 150f;
+    public float fastMoveSpeed = 200f;
     public float freeLookSpeed = 0.2f;
 
     // Follow camera
@@ -45,13 +44,12 @@ public class CameraController : MonoBehaviour
         }
 
         // Aspetta un frame per trovare tutti i corpi
-        Invoke("FindAllBodies", 0.1f);
+        Invoke("FindAllBodies", 0.6f);
     }
 
     void FindAllBodies()
     {
         allBodies = FindObjectsOfType<CelestialBody>();
-        Debug.Log("Corpi torvati per la camera: " + allBodies.Length);
     }
 
     void Update()
@@ -86,10 +84,6 @@ public class CameraController : MonoBehaviour
                 pitch = transform.eulerAngles.x;
                 Debug.Log("FREE CAMERA attivata - WASD per muoversi.");
             }
-            else
-            {
-                Debug.Log("FOLLOW CAMERA attivata - segue " + (target != null ? target.name : "nessuno"));
-            }
         }
     }
 
@@ -108,6 +102,13 @@ public class CameraController : MonoBehaviour
             currentTargetIndex = (currentTargetIndex + 1) % allBodies.Length;
             target = allBodies[currentTargetIndex].transform;
             Debug.Log("Target: " + target.name);
+
+            // Adatta la distanza alla dimensione del pianeta
+            CelestialBody body = target.GetComponent<CelestialBody>();
+            if (body != null)
+            {
+                currentDistance = body.radius * 8f;
+            }
         }
     }
 
@@ -118,8 +119,13 @@ public class CameraController : MonoBehaviour
 
         // Zoom con rotella
         float scroll = mouse.scroll.ReadValue().y;
-        currentDistance -= scroll * followZoomSpeed * Time.deltaTime;
-        currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+        if (scroll != 0)
+        {
+            // Zoom proporzionale alla distanza attuale
+            float zoomAmount = currentDistance * 0.15f;
+            currentDistance -= scroll * zoomAmount;
+            currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+        }
 
         // Rotazione con tasto destro
         if (mouse.rightButton.isPressed)
@@ -127,7 +133,7 @@ public class CameraController : MonoBehaviour
             Vector2 delta = mouse.delta.ReadValue();
             rotationX += delta.x * followRotationSpeed;
             rotationY -= delta.y * followRotationSpeed;
-            rotationY = Mathf.Clamp(rotationY, 5f, 85f);
+            rotationY = Mathf.Clamp(rotationY, -89f, 89f);
         }
 
         // Posiziona la camera
@@ -162,6 +168,15 @@ public class CameraController : MonoBehaviour
         if (keyboard.leftShiftKey.isPressed)
         {
             speed = fastMoveSpeed;
+        }
+
+        // Velocità proporzionale alla distanza dal sole
+        float distanceBoost = 1f;
+        GameObject sun = GameObject.Find("Sun");
+        if (sun != null)
+        {
+            float dist = Vector3.Distance(transform.position, sun.transform.position);
+            distanceBoost = Mathf.Max(1f, dist / 50f);
         }
 
         Vector3 move = Vector3.zero;
