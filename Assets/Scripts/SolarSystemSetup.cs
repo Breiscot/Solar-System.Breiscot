@@ -21,39 +21,54 @@ public class SolarSystemSetup : MonoBehaviour
     Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
     {
         Texture2D texture = Resources.Load<Texture2D>("Textures/" + planetName);
-        
+        if (texture == null)
+            texture = Resources.Load<Texture2D>("Textures/" + planetName.ToLower());
 
+        // Trova lo shader
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+        if (shader == null)
+            shader = Shader.Find("Universal Render Pipeline/Simple Lit");
         if (shader == null)
             shader = Shader.Find("Standard");
         if (shader == null)
             shader = Shader.Find("Sprites/Default");
 
         Material mat = new Material(shader);
-        
-        Texture2D texture = Resources.Load<Texture2D>("Textures/" + planetName);
 
         if (texture != null)
         {
             Debug.Log(planetName + ": texture caricata.");
+            texture.filterMode = FilterMode.Bilinear;
+
             mat.mainTexture = texture;
 
             if (mat.HasProperty("_BaseMap"))
                 mat.SetTexture("_BaseMap", texture);
+            if (mat.HasProperty("_MainTex"))
+                mat.SetTexture("_MainTex", texture);
 
+            // Colore Bianco per mostrare texture con maggiore probabilità
+            mat.color = Color.white;
             if (mat.HasProperty("_BaseColor"))
                 mat.SetColor("_BaseColor", Color.white);
 
-            mat.color = Color.white;
-            texture.filterMode = FilterMode.Bilinear;
+            // No riflessi metallici
+            if (mat.HasProperty("_Metallic"))
+                mat.SetFloat("_Metallic", 0f);
+            if (mat.HasProperty("_Smoothness"))
+                mat.SetFloat("_Smoothness", 0.0f);
         }
         else
         {
-            Debug.LogWarning(planetName + ": texture non trovata, uso colore");
+            Debug.LogWarning(planetName + ": texture non trovata.");
+
             mat.color = fallbackColor;
-            
             if (mat.HasProperty("_BaseColor"))
                 mat.SetColor("_BaseColor", fallbackColor);
+            if (mat.HasProperty("_Metallic"))
+                mat.SetFloat("_Metallic", 0f);
+            if (mat.HasProperty("_Smoothness"))
+                mat.SetFloat("_Smoothness", 0.1f);
         }
 
         if (emissive)
@@ -64,9 +79,8 @@ public class SolarSystemSetup : MonoBehaviour
             {
                 if (mat.HasProperty("_EmissionMap"))
                     mat.SetTexture("_EmissionMap", texture);
-
                 if (mat.HasProperty("_EmissionColor"))
-                    mat.SetColor("_EmissionColor", Color.white * 3f);
+                    mat.SetColor("_EmissionColor", Color.white * 2f);
             }
             else
             {
@@ -101,6 +115,9 @@ public class SolarSystemSetup : MonoBehaviour
         // Materiale luminoso per il sole
         Renderer rend = sun.GetComponent<Renderer>();
         rend.material = CreateMaterial("Sun", Color.yellow, true);
+
+        // Rimuovi collider del sole
+        Destroy(sun.GetComponent<Collider>());
 
         // Luce del sole
         sun.AddComponent<SunLight>();

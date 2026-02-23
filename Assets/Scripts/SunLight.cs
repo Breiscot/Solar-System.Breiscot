@@ -10,49 +10,36 @@ public class SunLight : MonoBehaviour
         {
             Destroy(existingLight);
         }
+        // Luce del sole - illumina tanto
+        Light mainLight = gameObject.AddComponent<Light>();
+        mainLight.type = LightType.Point;
+        mainLight.intensity = 6000f;
+        mainLight.range = 400f;
+        mainLight.color = new Color(1f, 0.95f, 0.85f);
+        mainLight.shadows = LightShadows.None;
 
-        // Luce direzionale principale
-        GameObject dirLightObj = new GameObject("SunDirectionalLight");
-        dirLightObj.transform.parent = transform;
-        dirLightObj.transform.localPosition = Vector3.zero;
+        // Luce Media
+        GameObject midLightObj = new GameObject("SunMidLight");
+        midLightObj.transform.parent = transform;
+        midLightObj.transform.localPosition = Vector3.zero;
 
-        Light dirLight = dirLightObj.AddComponent<Light>();
-        dirLight.type = LightType.Directional;
-        dirLight.intensity = 1.5f;
-        dirLight.color = new Color(1f, 0.95f, 0.85f);
-        dirLight.shadows = LightShadows.Soft;
-        dirLight.shadowStrength = 0.8f;
+        Light midLight = midLightObj.AddComponent<Light>();
+        midLight.type = LightType.Point;
+        midLight.intensity = 3000f;
+        midLight.range = 800f;
+        midLight.color = new Color(1f, 0.93f, 0.8f);
+        midLight.shadows = LightShadows.None;
 
-        // Luce point per illuminare tutti i lati
-        Light pointLight = gameObject.AddComponent<Light>();
-        pointLight.type = LightType.Point;
-        pointLight.intensity = 5f;
-        pointLight.range = 800f;
-        pointLight.color = new Color(1f, 0.95f, 0.85f);
-        pointLight.shadows = LightShadows.None;
-
-        // Luce lontana debole
+        // Luce debole
         GameObject farLightObj = new GameObject("SunFarLight");
         farLightObj.transform.parent = transform;
         farLightObj.transform.localPosition = Vector3.zero;
-
+        
         Light farLight = farLightObj.AddComponent<Light>();
         farLight.type = LightType.Point;
-        farLight.intensity = 2f;
+        farLight.intensity = 2000f;
         farLight.range = 1500f;
         farLight.color = new Color(1f, 0.9f, 0.7f);
         farLight.shadows = LightShadows.None;
-
-        // Aggiorna la direzione della luce direzionale
-        StartCoroutine(UpdateDirectionalLight(dirLightObj.transform));
-    }
-
-    System.Collections.IEnumerator UpdateDirectionalLight(Transform dirLight)
-    {
-        while (true)
-        {
-            dirLight.rotation = Quaternion.Euler(30f, 0f, 0f);
-            yield return new WaitForSeconds(0.5f);
-        }
     }
 }

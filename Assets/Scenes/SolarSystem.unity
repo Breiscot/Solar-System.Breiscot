@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854565a265248c743ab867c73faf37f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarFields
-  numberOfStars: 1000
+  numberOfStars: 2500
   spawnRadius: 1000
   starSize: 0.5
 --- !u!1 &1641413712
@@ -462,7 +462,7 @@ MonoBehaviour:
   curvatureStrength: 0.003
   maxDepth: 30
   softeningDistance: 5
-  gridColor: {r: 0, g: 0.8, b: 1, a: 0.3}
+  gridColor: {r: 0.4039216, g: 0.4039216, b: 0.4039216, a: 1}
   lineWidth: 0.1
 --- !u!4 &1928529891
 Transform:
