@@ -20,6 +20,9 @@ public class SolarSystemSetup : MonoBehaviour
 
     Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
     {
+        Texture2D texture = Resources.Load<Texture2D>("Textures/" + planetName);
+        
+
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
         if (shader == null)
             shader = Shader.Find("Standard");
@@ -89,7 +92,6 @@ public class SolarSystemSetup : MonoBehaviour
         body.isStatic = true;
         body.drawOrbitPath = false;
         body.bodyColor = Color.yellow;
-        body.galacticVelocity = new Vector3(0, 0, 0.5f);
 
         // Rotazione del sole
         PlanetRotation rot = sun.AddComponent<PlanetRotation>();
@@ -101,14 +103,7 @@ public class SolarSystemSetup : MonoBehaviour
         rend.material = CreateMaterial("Sun", Color.yellow, true);
 
         // Luce del sole
-        Light sunLight = sun.AddComponent<Light>();
-        sunLight.type = LightType.Point;
-        sunLight.intensity = 3f;
-        sunLight.range = 600f;
-        sunLight.color = new Color (1f, 0.95f, 0.8f);
-
-        // Glow del sole
-        sun.AddComponent<SunGlow>();
+        sun.AddComponent<SunLight>();
     }
 
     void CreatePlanet(string name, float mass, float radius, float distance, Color color, float tilt, float rotSpeed)

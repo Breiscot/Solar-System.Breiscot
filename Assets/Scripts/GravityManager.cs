@@ -10,13 +10,11 @@ public class GravityManager : MonoBehaviour
     public float timeScale = 1f;
 
     [Header("Stabilità")]
-    [Tooltip("Se attivo, i pianeti sentono solo la gravità del sole")]
     public float softeningFactor = 0.5f;
     public int maxSubSteps = 200;
 
     private List<CelestialBody> bodies = new List<CelestialBody>();
     private bool initialized = false;
-
     private float baseTimeStep = 0.005f;
 
     void Start()
@@ -78,26 +76,17 @@ public class GravityManager : MonoBehaviour
 
     void DoPhysicsStep(float dt)
     {
-        // Muove il sole con la velocità galattica
-        foreach (CelestialBody body in bodies)
-        {
-            if (body.isSun)
-            {
-                body.transform.position += body.currentVelocity * dt;
-            }
-        }
-
         // Aggiorna posizioni pianeti e luna
         foreach (CelestialBody body in bodies)
         {
-            if (body.isSun) continue;
-            body.transform.position += body.currentVelocity * dt + 0.5f * body.currentAcceleration * dt * dt; 
+            if (body.isSun || body.isStatic) continue;
+            body.transform.position += body.currentVelocity * dt + 0.5f * body.currentAcceleration * dt * dt;
         }
 
         // Calcola le nuove accelerazioni    
         foreach (CelestialBody body in bodies)
         {
-            if (body.isSun) continue;
+            if (body.isSun || body.isStatic) continue;
             Vector3 newAcceleration = CalculateAcceleration(body);
             body.currentVelocity += 0.5f * (body.currentAcceleration + newAcceleration) * dt;
             body.currentAcceleration = newAcceleration;
