@@ -16,7 +16,9 @@ public class CameraController : MonoBehaviour
 
     [Header("Free Camera")]
     public float moveSpeed = 50f;
-    public float fastMoveSpeed = 200f;
+    public float minMoveSpeed = 10f;
+    public float maxMoveSpeed = 500f;
+    public float speedScrollSensitivity = 20f;
     public float freeLookSpeed = 0.2f;
 
     // Follow camera
@@ -24,11 +26,12 @@ public class CameraController : MonoBehaviour
     private float rotationX = 0f;
     private float rotationY = 45f;
 
-    // Free camera
+    // Private
+    private float currentDistance = 100f;
+    private float rotationX = 0f;
+    private float rotationY = 45f;
     private float yaw = 0f;
     private float pitch = 0f;
-
-    // Lista dei corpi celesti per il cambio target
     private CelestialBody[] allBodies;
     private int currentTargetIndex = 0;
 
@@ -151,6 +154,8 @@ public class CameraController : MonoBehaviour
         Mouse mouse = Mouse.current;
         Keyboard keyboard = Keyboard.current;
         if (mouse == null || keyboard == null) return;
+
+        // Rotella cambia velocità
 
         // Rotazione con tasto destro
         if (mouse.rightButton.isPressed)
