@@ -21,11 +21,6 @@ public class CameraController : MonoBehaviour
     public float speedScrollSensitivity = 20f;
     public float freeLookSpeed = 0.2f;
 
-    // Follow camera
-    private float currentDistance = 100f;
-    private float rotationX = 0f;
-    private float rotationY = 45f;
-
     // Private
     private float currentDistance = 100f;
     private float rotationX = 0f;
@@ -156,6 +151,12 @@ public class CameraController : MonoBehaviour
         if (mouse == null || keyboard == null) return;
 
         // Rotella cambia velocità
+        float scroll = mouse.scroll.ReadValue().y;
+        if (scroll != 0)
+        {
+            moveSpeed += scroll * speedScrollSensitivity;
+            moveSpeed = Mathf.Clamp(moveSpeed, minMoveSpeed, maxMoveSpeed);
+        }
 
         // Rotazione con tasto destro
         if (mouse.rightButton.isPressed)
@@ -168,22 +169,14 @@ public class CameraController : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(pitch, yaw, 0);
 
-        // Movimento con WASD
+        // Velocità base
         float speed = moveSpeed;
         if (keyboard.leftShiftKey.isPressed)
         {
-            speed = fastMoveSpeed;
+            speed *= 3f;
         }
 
-        // Velocità proporzionale alla distanza dal sole
-        float distanceBoost = 1f;
-        GameObject sun = GameObject.Find("Sun");
-        if (sun != null)
-        {
-            float dist = Vector3.Distance(transform.position, sun.transform.position);
-            distanceBoost = Mathf.Max(1f, dist / 50f);
-        }
-
+        // Movimento
         Vector3 move = Vector3.zero;
 
         if (keyboard.wKey.isPressed) move += transform.forward;
@@ -194,5 +187,11 @@ public class CameraController : MonoBehaviour
         if (keyboard.qKey.isPressed) move -= Vector3.up;
 
         transform.position += move.normalized * speed * Time.deltaTime;
+    }
+
+    // Per l'UI - mostra la velocità attuale
+    public float GetCurrentSpeed()
+    {
+        return moveSpeed;
     }
 }

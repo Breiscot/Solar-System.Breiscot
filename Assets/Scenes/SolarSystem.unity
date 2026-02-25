@@ -119,6 +119,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &228355949
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 228355951}
+  - component: {fileID: 228355950}
+  m_Layer: 0
+  m_Name: ControlsUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &228355950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228355949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd139dd265beabc47bd03ddfed290937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControlsUI
+--- !u!4 &228355951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228355949}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -66.01925, y: 0, z: -40.34773}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &324189117
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +202,6 @@ MonoBehaviour:
   - 10
   - 50
   currentScaleIndex: 3
-  timeText: {fileID: 0}
 --- !u!4 &324189119
 Transform:
   m_ObjectHideFlags: 0
@@ -330,7 +373,9 @@ MonoBehaviour:
   minDistance: 5
   maxDistance: 500
   moveSpeed: 50
-  fastMoveSpeed: 150
+  minMoveSpeed: 10
+  maxMoveSpeed: 500
+  speedScrollSensitivity: 20
   freeLookSpeed: 0.2
 --- !u!1 &637510503
 GameObject:
@@ -533,3 +578,4 @@ SceneRoots:
   - {fileID: 637510504}
   - {fileID: 324189119}
   - {fileID: 1928529891}
+  - {fileID: 228355951}

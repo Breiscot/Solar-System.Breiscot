@@ -8,28 +8,23 @@ public class TimeController : MonoBehaviour
     public float[] timeScales = { 0.1f, 0.25f, 0.5f, 1f, 2f, 5f, 10f, 50f };
     public int currentScaleIndex = 3; // Parte da 1x
 
-    [Header("UI")]
-    public TextMeshProUGUI timeText;
-
     private GravityManager gravityManager;
     private PlanetRotation[] allRotations;
+    private CameraController cameraController;
+    private TextMeshProUGUI timeText;
+    private bool isPaused = false;
 
     void Start()
     {
-        Invoke("Initialize", 0.6f);
+        Invoke("Initialize", 0.7f);
     }
 
     void Initialize()
     {
         gravityManager = FindObjectOfType<GravityManager>();
         allRotations = FindObjectsOfType<PlanetRotation>();
-
-        // Crea UI
-        if (timeText == null)
-        {
-            CreateUI();
-        }
-
+        cameraController = FindObjectOfType<CameraController>();
+        CreateUI();
         UpdateTimeScale();
     }
 
@@ -41,36 +36,47 @@ public class TimeController : MonoBehaviour
         // Freccia SU = più veloce
         if (keyboard.upArrowKey.wasPressedThisFrame)
         {
+            if (isPaused) isPaused = false;
             if (currentScaleIndex < timeScales.Length - 1)
             {
                 currentScaleIndex++;
-                UpdateTimeScale();
             }
+            UpdateTimeScale();
         }
 
         // Freccia GIU' = più lento
         if (keyboard.downArrowKey.wasPressedThisFrame)
         {
+            if (isPaused) isPaused = false;
             if (currentScaleIndex > 0)
             {
                 currentScaleIndex--;
-                UpdateTimeScale();
             }
+            UpdateTimeScale();
         }
 
         // SPAZIO = pausa
         if (keyboard.spaceKey.wasPressedThisFrame)
         {
-            if (gravityManager.timeScale > 0)
+            isPaused = !isPaused;
+
+            if (isPaused)
             {
-                gravityManager.timeScale = 0;
+                if (gravityManager != null)
+                    gravityManager.timeScale = 0;
                 UpdateRotationSpeeds(0);
-                UpdateUI("⏸️ PAUSA");
+                UpdateUI();
             }
             else
             {
                 UpdateTimeScale();
             }
+        }
+
+        // Aggiorna UI ogni frame per mostrare velocità camera
+        if (cameraController != null && cameraController.freeCamera)
+        {
+            UpdateUI();
         }
     }
 
@@ -88,10 +94,7 @@ public class TimeController : MonoBehaviour
         UpdateRotationSpeeds(scale);
 
         // Aggiorna la UI
-        string speedText = scale + "x";
-        UpdateUI("⏩ " + speedText);
-
-        Debug.Log("Velocità tempo: " + speedText);
+        UpdateUI();
     }
 
     void UpdateRotationSpeeds(float scale)
@@ -107,41 +110,68 @@ public class TimeController : MonoBehaviour
         }
     }
 
-    void UpdateUI(string text)
+    void UpdateUI()
     {
-        if (timeText != null)
+        if (timeText == null) return;
+
+        string timeStr;
+        if (isPaused)
         {
-            timeText.text = text;
+            timeStr = "⏸ Paused";
         }
+        else
+        {
+            timeStr = "⏩ " + timeScales[currentScaleIndex] + "x";
+        }
+
+        // Mostra velocità camera se in free mode
+        if (cameraController != null && cameraController.freeCamera)
+        {
+            timeStr += " | Speed: " + Mathf.Round(cameraController.GetCurrentSpeed());
+        }
+
+        timeText.text = timeStr;
     }
 
     void CreateUI()
     {
-        // Crea Canvas
-        GameObject canvasObj = new GameObject("TimeCanvas");
-        Canvas canvas = canvasObj.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 100;
-        canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>();
+        // Crea Canvas esistente
+        Canvas existingCanvas = FindObjectOfType<Canvas>();
+        GameObject canvasObj;
 
-        // Pannello sfondo
-        GameObject panel = new GameObject("Panel");
+        if (existingCanvas != null)
+        {
+            canvasObj = existingCanvas.gameObject;
+        }
+        else
+        {
+            canvasObj = new GameObject("UICanvas");
+            Canvas canvas = canvasObj.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 100;
+            canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>();
+        }
+
+        // Pannello in alto
+        GameObject panel = new GameObject("TimePanel");
         panel.transform.SetParent(canvasObj.transform, false);
+
         UnityEngine.UI.Image panelImage = panel.AddComponent<UnityEngine.UI.Image>();
-        panelImage.color = new Color(0, 0, 0, 0.5f);
+        panelImage.color = new Color(0, 0, 0, 0.6f);
 
         RectTransform panelRect = panel.GetComponent<RectTransform>();
-        panelRect.anchorMin = new Vector2(0.35f, 0.92f);
-        panelRect.anchorMax = new Vector2(0.65f, 1f);
+        panelRect.anchorMin = new Vector2(0.3f, 0.92f);
+        panelRect.anchorMax = new Vector2(0.7f, 1f);
         panelRect.offsetMin = Vector2.zero;
         panelRect.offsetMax = Vector2.zero;
 
-        // Tasto velocità
+        // Tasto
         GameObject textObj = new GameObject("TimeText");
         textObj.transform.SetParent(panel.transform, false);
+
         timeText = textObj.AddComponent<TextMeshProUGUI>();
         timeText.text = "⏩ 1x";
-        timeText.fontSize = 24;
+        timeText.fontSize = 22;
         timeText.color = Color.white;
         timeText.alignment = TextAlignmentOptions.Center;
 
@@ -150,20 +180,5 @@ public class TimeController : MonoBehaviour
         textRect.anchorMax = Vector2.one;
         textRect.offsetMin = Vector2.zero;
         textRect.offsetMax = Vector2.zero;
-
-        // Tasto istruzioni
-        GameObject helpObj = new GameObject("HelpText");
-        helpObj.transform.SetParent(canvasObj.transform, false);
-        TextMeshProUGUI helpText = helpObj.AddComponent<TextMeshProUGUI>();
-        helpText.text = "↕ Velocità | SPAZIO Pausa | TAB Camera | F Target | G Griglia";
-        helpText.fontSize = 16;
-        helpText.color = new Color(1, 1, 1, 0.6f);
-        helpText.alignment = TextAlignmentOptions.Center;
-
-        RectTransform helpRect = helpObj.GetComponent<RectTransform>();
-        helpRect.anchorMin = new Vector2(0.1f, 0.88f);
-        helpRect.anchorMax = new Vector2(0.9f, 0.92f);
-        helpRect.offsetMin = Vector2.zero;
-        helpRect.offsetMax = Vector2.zero;
     }
 }
