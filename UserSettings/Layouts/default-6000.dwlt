@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -273,8 +273,8 @@ MonoBehaviour:
     y: 0
     width: 411
     height: 933
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: 43
     width: 1920
     height: 36
   m_SerializedDataModeController:
@@ -567,8 +567,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1510
-    y: 24
+    x: 1509
+    y: 79
     width: 410
     height: 907
   m_SerializedDataModeController:
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 24
+    y: 79
     width: 396
     height: 576
   m_SerializedDataModeController:
@@ -642,9 +642,9 @@ MonoBehaviour:
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
-      - m_Data: -393154
-      - m_Data: -263022
-      - m_Data: -165974
+      - m_Data: -46874
+      - m_Data: -46502
+      - m_Data: -45806
       - m_Data: -1294
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -692,8 +692,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 398
-    y: 24
+    x: 397
+    y: 79
     width: 1110
     height: 576
   m_SerializedDataModeController:
@@ -1182,9 +1182,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -57.554558, y: 0.5204172, z: -38.979725}
+    m_Target: {x: -54.215374, y: 0.66393495, z: -38.814842}
     speed: 2
-    m_Value: {x: -57.554558, y: 0.5204172, z: -38.979725}
+    m_Value: {x: -54.215374, y: 0.66393495, z: -38.814842}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1230,13 +1230,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.482
   m_Rotation:
-    m_Target: {x: 0.019739173, y: -0.7611191, z: 0.022997217, w: 0.6479929}
+    m_Target: {x: 0.09413093, y: -0.7487336, z: 0.108733684, w: 0.6471759}
     speed: 2
-    m_Value: {x: -0.019739173, y: 0.7611191, z: -0.022997215, w: -0.6479929}
+    m_Value: {x: 0.0931545, y: -0.7488501, z: 0.107603766, w: 0.64727676}
   m_Size:
-    m_Target: 10
+    m_Target: 1.8911536
     speed: 2
-    m_Value: 10
+    m_Value: 1.8911536
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1330,7 +1330,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 626
+    y: 681
     width: 1508
     height: 305
   m_SerializedDataModeController:
@@ -1357,7 +1357,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Resources/Materials
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Resources/Materials
   m_LastFoldersGridSize: 16
   m_LastProjectPath: 'D:\Projects Unity\Solar System [Breiscot]'
   m_LockTracker:
@@ -1376,14 +1376,15 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs:
-    - m_Data: 46300
+    - m_Data: 46318
     m_LastClickedID:
-      m_Data: 46300
+      m_Data: 46318
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45966
-    - m_Data: 45968
-    - m_Data: 45970
+    - m_Data: 46014
+    - m_Data: 46016
+    - m_Data: 46018
+    - m_Data: 1000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1416,9 +1417,9 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45966
-    - m_Data: 45968
-    - m_Data: 45970
+    - m_Data: 46014
+    - m_Data: 46016
+    - m_Data: 46018
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1445,10 +1446,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs:
-    - m_Data: 46356
-    m_LastClickedInstanceID: 46356
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: []
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
       m_UserAcceptedRename: 0

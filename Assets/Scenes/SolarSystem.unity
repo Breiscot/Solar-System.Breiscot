@@ -568,6 +568,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c86f8268fee09848b7ee4eadf2009dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SolarSystemSetup
+  planetTextures:
+  - {fileID: 2800000, guid: b11cecd7608562a4aba6f8af0b7cf0fc, type: 3}
+  - {fileID: 2800000, guid: 00ea597fffc3e064c85022c382e94a67, type: 3}
+  - {fileID: 2800000, guid: f00f6edfb3ebc644580aad2906317cad, type: 3}
+  - {fileID: 2800000, guid: c06a13e6f14ab0d449f2e5ac5e3a4193, type: 3}
+  - {fileID: 2800000, guid: faf0af307fb617d40a8612a73b36244d, type: 3}
+  - {fileID: 2800000, guid: 2a218b9594f673e4f9576a2541efd7cf, type: 3}
+  - {fileID: 2800000, guid: a0f83cfb2055a2e41982bcc09f922527, type: 3}
+  - {fileID: 2800000, guid: 3d810f8ce33637c419b8230f57b0d122, type: 3}
+  - {fileID: 2800000, guid: 78eac69b6556e4e4da77404958fadf61, type: 3}
+  - {fileID: 2800000, guid: 389bacd157155ec43a5362d5845b27ed, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SolarSystemSetup : MonoBehaviour
 {
+
+    [SerializeField] private Texture2D[] planetTextures;
     void Start()
     {
         CreateSun();
@@ -20,25 +22,53 @@ public class SolarSystemSetup : MonoBehaviour
 
     Material CreateMaterial(string planetName, Color fallbackColor, bool emissive)
     {
+        Material loadedMat = Resources.Load<Material>("Materials/" + planetName + "_Mat");
+
+        if (loadedMat != null)
+        {
+            Debug.Log("YES " + planetName + ": materiale pre-creato trovato.");
+            return new Material(loadedMat); // Crea copia
+        }
+
         Texture2D texture = Resources.Load<Texture2D>("Textures/" + planetName);
+        
         if (texture == null)
             texture = Resources.Load<Texture2D>("Textures/" + planetName.ToLower());
 
+        Material mat;
+
         // Trova lo shader
         Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+
         if (shader == null)
             shader = Shader.Find("Universal Render Pipeline/Simple Lit");
+
         if (shader == null)
             shader = Shader.Find("Standard");
-        if (shader == null)
-            shader = Shader.Find("Sprites/Default");
+            
+        if (shader != null)
+        {
+            mat = new Material(shader);
+        }
+        else
+        {
+            // FallBack
+            mat = new Material(Shader.Find("Sprites/Default"));
+        }
 
-        Material mat = new Material(shader);
+        mat.SetInt("_Cull", 2); // 2 = Nero
+
+        if (mat.HasProperty("_DoubleSidedEnable"))
+            mat.SetFloat("_DoubleSidedEnable", 0f);
+
+        if (mat.HasProperty("_CullMode"))
+            mat.SetFloat("_CullMode", 2f);
 
         if (texture != null)
         {
             Debug.Log(planetName + ": texture caricata.");
             texture.filterMode = FilterMode.Bilinear;
+            texture.wrapMode = TextureWrapMode.Clamp;
 
             mat.mainTexture = texture;
 
@@ -88,6 +118,8 @@ public class SolarSystemSetup : MonoBehaviour
                     mat.SetColor("_EmissionColor", fallbackColor * 3f);
             }
         }
+
+        mat.renderQueue = 2000;
 
         return mat;
     }
