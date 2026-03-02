@@ -1,48 +1,47 @@
-# 🌌 Solar System Simulation
+#  Solar System Simulation
 
-A realistic 3D solar system simulation built with Unity, featuring Newtonian gravity physics, spacetime curvature visualization, and accurate planetary mechanics.
+A realistic 3D solar system simulation built with Unity.
 
 ![Solar System Preview](Screenshots/1.png)
 
-## ✨ Features
+##  Features
 
 ### Physics Simulation
-- **Newtonian Gravity**: Realistic gravitational interactions using Newton's law of universal gravitation
-- **Velocity Verlet Integration**: Stable numerical integration for accurate orbital mechanics
-- **Sub-stepping**: Maintains stability even at high time scales
-- **Orbital Mechanics**: Planets follow realistic elliptical orbits around the Sun
+- **Newtonian Gravity**
+- **Velocity Verlet Integration**
+- **Orbital Mechanics**
 
 ### Celestial Bodies
-- ☀️ **Sun** - Central star with realistic lighting and emission
-- 🪨 **Mercury** - Smallest planet, closest to the Sun
-- 🟠 **Venus** - Retrograde rotation (spins backwards)
-- 🌍 **Earth** - With orbiting Moon
-- 🔴 **Mars** - The red planet
-- 🟤 **Jupiter** - Gas giant with fast rotation
-- 🪐 **Saturn** - Complete with ring system
-- 🔵 **Uranus** - Extreme axial tilt (97.8°)
-- 🔵 **Neptune** - Distant ice giant
-- 🌙 **Moon** - Earth's natural satellite with proper orbital mechanics
+-  **Sun**
+-  **Mercury**
+-  **Venus**
+-  **Earth**
+-  **Mars**
+-  **Jupiter**
+-  **Saturn**
+-  **Uranus**
+-  **Neptune**
+-  **Moon**
 
 ### Visual Features
-- **Realistic Textures**: High-quality planet textures
-- **Spacetime Curvature Grid**: Visualize how mass warps spacetime
-- **Orbital Trails**: See the path each planet takes
-- **Axial Tilt**: Each planet rotates on its realistic axis
-- **Day/Night Cycle**: Proper illumination from the Sun
-- **Star Field**: 2000+ background stars
+- **Realistic Textures**
+- **Spacetime Curvature Grid**
+- **Orbital Trails**
+- **Axial Tilt**
+- **Day/Night Cycle**
+- **Star Field**
 
 ### Camera System
-- **Follow Camera**: Lock onto any celestial body
-- **Free Camera**: Explore the solar system freely
-- **Smooth Zoom**: Logarithmic zoom for seamless navigation
+- **Follow Camera**
+- **Free Camera**
+- **Smooth Zoom**
 
 ### Time Control
-- **Variable Time Scale**: From 0.1x to 50x speed
-- **Pause Function**: Freeze time to observe
-- **Stable Physics**: Maintains accuracy at all speeds
+- **Variable Time Scale**
+- **Pause Function**
+- **Stable Physics**
 
-## 🎮 Controls
+##  Controls
 
 ### Camera
 | Key | Action |
@@ -79,11 +78,11 @@ A realistic 3D solar system simulation built with Unity, featuring Newtonian gra
 - **Render Pipeline**: Universal Render Pipeline (URP)
 - **Input System**: New Input System package
 
-## 📦 Installation
+##  Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/solar-system-simulator.git
+   git clone https://github.com/Breiscot/Solar-System.Breiscot.git
 
 2. Open the project in Unity Hub
 
@@ -96,15 +95,14 @@ A realistic 3D solar system simulation built with Unity, featuring Newtonian gra
     ```bash
     Assets/Scenes/SolarSystem.unity
 
-5. Press Play!
+5. And then try it!
 
-## 📁 Project Structure
+##  Project Structure
   ```bash
     Assets/
-    ├── Materials/           # Planet materials
     ├── Resources/
     │   ├── Textures/       # Planet textures
-    │   └── Materials/      # Runtime-loaded materials
+    │   └── Materials/      # Loaded materials
     ├── Scenes/
     │   └── SolarSystem.unity
     ├── Scripts/
